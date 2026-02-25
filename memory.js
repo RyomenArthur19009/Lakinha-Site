@@ -13,32 +13,40 @@
   const closeWinBtn = document.getElementById("closeWinBtn");
   const continueBtn = document.getElementById("continueBtn");
 
-  // CONFIG imagens
+  // ========= CONFIG IMAGENS =========
   const PAIRS = 10;
+
+  // ✅ GitHub Pages é case-sensitive: sua pasta é "AssetsMemory"
   const IMG_FOLDER = "AssetsMemory";
-  const IMG_EXT = "jpg";          // se for webp: "webp"
+
+  const IMG_EXT = "jpg";          // se for png/webp, troque aqui
   const LEADING_ZERO = true;      // 01..10
 
-  // CONFIG SFX (Rain World UI)
+  // ========= CONFIG SFX (Rain World UI) =========
+  // ✅ seu repo tem .wav e subpastas: sfx/wood e sfx/metal
   const SFX_BASE = "sfx";
-  const SFX_EXT  = "mp3";         // troque pra "ogg" ou "wav" se necessário
+  const SFX_EXT  = "wav";
 
   const SFX = {
     wood: [
-      `UI_UIWood1.${SFX_EXT}`,
-      `UI_UIWood2.${SFX_EXT}`,
-      `UI_UIWood3.${SFX_EXT}`,
-      `UI_UIWood4.${SFX_EXT}`,
-      `UI_UIWood5.${SFX_EXT}`,
+      `wood/UI_UIWood1.${SFX_EXT}`,
+      `wood/UI_UIWood2.${SFX_EXT}`,
+      `wood/UI_UIWood3.${SFX_EXT}`,
+      `wood/UI_UIWood4.${SFX_EXT}`,
+      `wood/UI_UIWood5.${SFX_EXT}`,
     ],
-    woodHit: `UI_UIWoodHIT.${SFX_EXT}`,
+    woodHit: `wood/UI_UIWoodHit.${SFX_EXT}`,
+
     metal: [
-      `UI_UIMetal1.${SFX_EXT}`,
-      `UI_UIMetal2.${SFX_EXT}`,
-      `UI_UIMetal3.${SFX_EXT}`,
+      `metal/UI_UIMetal1.${SFX_EXT}`,
+      `metal/UI_UIMetal2.${SFX_EXT}`,
+      `metal/UI_UIMetal3.${SFX_EXT}`,
+      `metal/UI_UIMetal4.${SFX_EXT}`,
     ],
-    metalHit: `UI_UIMetalHIT.${SFX_EXT}`,
+    metalHit: `metal/UI_UIMetalHit.${SFX_EXT}`,
   };
+
+  const absUrl = (p) => new URL(p, window.location.href).href;
 
   const vol = { wood: 0.25, metal: 0.35, hit: 0.45 };
   const audioCache = new Map();
@@ -49,14 +57,14 @@
     sfxUnlocked = true;
 
     // tentar liberar áudio com 1 play/pause inaudível
-    const a = new Audio(`${SFX_BASE}/${SFX.wood[0]}`);
+    const a = new Audio(absUrl(`${SFX_BASE}/${SFX.wood[0]}`));
     a.volume = 0.0001;
     a.play().then(() => { a.pause(); a.currentTime = 0; }).catch(() => {});
   }
   window.addEventListener("pointerdown", unlockSfxOnce, { once: true });
 
   function playSfxFile(filename, volume){
-    const src = `${SFX_BASE}/${filename}`;
+    const src = absUrl(`${SFX_BASE}/${filename}`);
     let a = audioCache.get(src);
     if (!a){
       a = new Audio(src);
@@ -154,7 +162,7 @@
       <div class="card-inner">
         <div class="face front"><span>⋯</span></div>
         <div class="face back">
-          <img src="${src}" alt="Carta" loading="eager" decoding="async" />
+          <img src="${absUrl(src)}" alt="Carta" loading="eager" decoding="async" />
         </div>
       </div>
     `;
@@ -192,7 +200,6 @@
   function showWin(){
     stopTimer();
     winOverlay?.classList.remove("hidden");
-    // deixa o botão continuação ativo (heart.js vai cuidar do clique)
     continueBtn?.removeAttribute("disabled");
   }
 
@@ -230,7 +237,7 @@
         setTimeout(showWin, 450);
       }
     } else {
-      // erro: wood (e opcionalmente HIT de madeira também)
+      // erro: wood
       sfxWood();
 
       setTimeout(() => {
