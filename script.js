@@ -1,7 +1,9 @@
 (() => {
   const $ = (id) => document.getElementById(id);
 
-  // Música
+  // ======================
+  // 🎵 MÚSICA (GitHub-ready)
+  // ======================
   const playlist = [
     "music/lovely_arps.mp3",
     "music/kairi.mp3",
@@ -17,7 +19,7 @@
   function setTrack(i){
     trackIndex = (i + playlist.length) % playlist.length;
     player.src = absUrl(playlist[trackIndex]);
-    player.volume = 0.3;
+    player.volume = 0.35;
   }
 
   async function playMusic(){
@@ -25,9 +27,7 @@
     try{
       await player.play();
       heartBtn?.classList.add("is-playing");
-    }catch{
-      // bloqueio de autoplay (normal)
-    }
+    }catch{}
   }
 
   function pauseMusic(){
@@ -36,11 +36,6 @@
   }
 
   async function toggleMusic(){
-    if (!player.src){
-      setTrack(0);
-      await playMusic();
-      return;
-    }
     if (player.paused) await playMusic();
     else pauseMusic();
   }
@@ -52,7 +47,9 @@
 
   heartBtn?.addEventListener("click", toggleMusic);
 
-  // Reveal
+  // ======================
+  // ✨ REVEAL ANIMATION
+  // ======================
   let observer;
   function observeReveals(){
     if (!observer){
@@ -69,7 +66,9 @@
   }
   observeReveals();
 
-  // Navegação
+  // ======================
+  // 📜 NAVEGAÇÃO
+  // ======================
   const msgSection = $("mensagem");
   const gameSection = $("game");
 
@@ -88,23 +87,10 @@
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
-  // Fechar vitória (o jogo abre)
-  $("closeWinBtn")?.addEventListener("click", () => $("winOverlay")?.classList.add("hidden"));
+  // ======================
+  // 🏆 OVERLAY WIN
+  // ======================
+  $("closeWinBtn")?.addEventListener("click", () => {
+    $("winOverlay")?.classList.add("hidden");
+  });
 })();
-
-const player = document.getElementById('player');
-const heartBtn = document.getElementById('heartBtn');
-
-// Defina o caminho da música aqui
-const musicaCaminho = 'music/sua-musica-aqui.mp3'; 
-player.src = musicaCaminho;
-
-heartBtn.addEventListener('click', () => {
-  if (player.paused) {
-    player.play();
-    heartBtn.classList.add('playing'); // se tiver animação no CSS
-  } else {
-    player.pause();
-    heartBtn.classList.remove('playing');
-  }
-});
